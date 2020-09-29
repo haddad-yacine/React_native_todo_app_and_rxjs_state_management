@@ -12,7 +12,7 @@ export interface LoadingIndicator {
 }
 export interface StoreState {
   todos: Todo[];
-  hideDoneTodos: boolean;
+  isDoneTodosVisible: boolean;
   loadingIndicator: LoadingIndicator;
 }
 

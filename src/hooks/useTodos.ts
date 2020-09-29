@@ -1,7 +1,7 @@
 import store from '../store';
 
 const useTodos = () => {
-  const addTodo = (title: string) => {
+  const add = (title: string) => {
     store.setState({
       newState: {
         todos: [
@@ -12,12 +12,11 @@ const useTodos = () => {
     });
   };
 
-  const toggleTodo = (todoId: number) => {
+  const toggle = (todoId: number) => {
     let todo = store
       .getCurrentState()
       .todos.find((todoItem) => todoItem.id === todoId);
     todo = {...todo!, isDone: !todo?.isDone};
-    console.log('=> toggleTodo: ', todo);
 
     const todosItems = store.getCurrentState().todos.map((todoItem) => {
       if (todoItem.id === todoId) {
@@ -33,7 +32,7 @@ const useTodos = () => {
     });
   };
 
-  const removeTodo = (todoId: number) => {
+  const remove = (todoId: number) => {
     store.setState({
       newState: {
         todos: store
@@ -43,7 +42,7 @@ const useTodos = () => {
     });
   };
 
-  return {addTodo, toggleTodo, removeTodo};
+  return {add, toggle, remove};
 };
 
 export default useTodos;

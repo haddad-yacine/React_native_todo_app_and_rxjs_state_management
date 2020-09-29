@@ -1,40 +1,27 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, memo, useState} from 'react';
+import React, {memo} from 'react';
 import {
   View,
   StyleSheet,
   Text,
   CheckBox,
   UIManager,
-  LayoutAnimation,
+  Animated,
 } from 'react-native';
 import {Todo as TodoType} from '../store/types';
 import useTodo from '../hooks/useTodo';
-import useStoreState from '../store/hooks/core/useStoreState';
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
 const Todo = (props: TodoType) => {
-  const {isDeleted, removeTodo, todo, toggleTodo} = useTodo(props);
-  const [hideMe, setHideMe] = useState(false);
-  const hideDoneTodos = useStoreState<boolean>({
-    selector: (state) => state.hideDoneTodos,
-    isEqual: (prev, curr) => prev === curr,
-  });
-  const {id, isDone, title} = todo;
-
-  useEffect(() => {
-    if (isDone) {
-      LayoutAnimation.easeInEaseOut();
-      setHideMe(!hideDoneTodos);
-    }
-  }, [isDone, hideDoneTodos]);
+  const {isVisible, remove, todo, toggle} = useTodo(props);
+  const {isDone, title} = todo;
 
   return (
-    <View
+    <Animated.View
       style={{
-        height: isDeleted || hideMe ? 0 : undefined,
+        height: isVisible ? undefined : 0,
         overflow: 'hidden',
       }}>
       <View
@@ -43,12 +30,12 @@ const Todo = (props: TodoType) => {
           backgroundColor: isDone ? 'yellow' : 'white',
         }}>
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.delete} onPress={removeTodo}>
+        <Text style={styles.delete} onPress={remove}>
           DELETE
         </Text>
-        <CheckBox onValueChange={() => toggleTodo(id)} value={isDone} />
+        <CheckBox onValueChange={toggle} value={isDone} />
       </View>
-    </View>
+    </Animated.View>
   );
 };
 

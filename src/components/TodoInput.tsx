@@ -4,11 +4,11 @@ import useTodos from '../hooks/useTodos';
 
 const TodoInput = () => {
   const [todoDescription, setTodoDescription] = useState('');
-  const {addTodo} = useTodos();
+  const {add} = useTodos();
 
   const onPress = () => {
     if (todoDescription.trim()) {
-      addTodo(todoDescription);
+      add(todoDescription);
       setTodoDescription('');
       Keyboard.dismiss();
     }

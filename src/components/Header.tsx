@@ -3,16 +3,16 @@ import {View, Text, StyleSheet, Switch} from 'react-native';
 import Store from '../store';
 import useStoreState from '../store/hooks/core/useStoreState';
 
-type HeaderState = {todosLength: number; hideDoneTodos: boolean};
+type HeaderState = {todosLength: number; isDoneTodosVisible: boolean};
 
 const Header = () => {
   const headerState = useStoreState<HeaderState>({
     selector: (state) => ({
       todosLength: state.todos.length,
-      hideDoneTodos: state.hideDoneTodos,
+      isDoneTodosVisible: state.isDoneTodosVisible,
     }),
     isEqual: (prev, cur) =>
-      prev.hideDoneTodos === cur.hideDoneTodos &&
+      prev.isDoneTodosVisible === cur.isDoneTodosVisible &&
       prev.todosLength === cur.todosLength,
   });
 
@@ -25,12 +25,12 @@ const Header = () => {
         </Text>
       </View>
       <View style={styles.switch}>
-        <Text style={styles.title}>Hide Done: </Text>
+        <Text style={styles.title}>Is Done Todos Visible: </Text>
         <Switch
-          value={headerState.hideDoneTodos}
+          value={headerState.isDoneTodosVisible}
           onValueChange={(value) =>
             Store.setState({
-              newState: {hideDoneTodos: value},
+              newState: {isDoneTodosVisible: value},
             })
           }
         />

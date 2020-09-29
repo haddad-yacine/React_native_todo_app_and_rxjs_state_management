@@ -8,5 +8,5 @@ const loadingIndicator: LoadingIndicator = {
 export const initialState: StoreState = {
   todos: [],
   loadingIndicator,
-  hideDoneTodos: false,
+  isDoneTodosVisible: true,
 };

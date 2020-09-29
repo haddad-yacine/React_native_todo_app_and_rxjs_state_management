@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {UIManager, LayoutAnimation} from 'react-native';
 import useStoreState from '../store/hooks/core/useStoreState';
 import {Todo} from '../store/types';
@@ -8,22 +8,41 @@ UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
 const useTodo = (props: {id: number}) => {
-  const [isDeleted, setIsDeleted] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const todo = useStoreState<Todo>({
     selector: (state) => state.todos.find((item) => item.id === props.id)!,
     isEqual: (prev, cur) => prev.isDone === cur.isDone,
   });
+  const {id, isDone} = todo;
 
-  const {toggleTodo, removeTodo, addTodo} = useTodos();
+  const isDoneTodosVisible = useStoreState<boolean>({
+    selector: (state) => state.isDoneTodosVisible,
+    isEqual: (prev, curr) => prev === curr,
+  });
 
-  const remove = () => {
+  const {toggle, remove} = useTodos();
+
+  const removeTodo = () => {
     LayoutAnimation.easeInEaseOut(() => {
-      removeTodo(props.id);
+      remove(id);
     });
-    setIsDeleted(true);
+    setIsVisible(false);
   };
 
-  return {todo, addTodo, toggleTodo, removeTodo: remove, isDeleted};
+  useEffect(() => {
+    if (isDone) {
+      LayoutAnimation.easeInEaseOut();
+      setIsVisible(isDoneTodosVisible);
+    }
+  }, [isDone, isDoneTodosVisible]);
+
+  return {
+    todo,
+    toggle: () => toggle(id),
+    remove: removeTodo,
+    isVisible,
+    isDoneTodosVisible,
+  };
 };
 
 export default useTodo;
